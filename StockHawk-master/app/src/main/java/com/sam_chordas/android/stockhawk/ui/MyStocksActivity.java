@@ -8,19 +8,25 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
+import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
@@ -29,13 +35,10 @@ import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.PeriodicTask;
-import com.google.android.gms.gcm.Task;
-import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+  private static final String LOG_TAG = MyStocksActivity.class.getSimpleName();
 
   /**
    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -52,7 +55,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Context mContext;
   private Cursor mCursor;
   boolean isConnected;
-
+//  private RecyclerView recyclerView;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -88,8 +91,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 // do something on item click
               }
             }));
-    recyclerView.setAdapter(mCursorAdapter);
 
+    recyclerView.setAdapter(mCursorAdapter);
+//    if(mCursorAdapter.getItemCount()==0){
+//      TextView empty_textview=(TextView)findViewById(R.id.empty_view);
+//      recyclerView.setVisibility(View.GONE);
+//      empty_textview.setVisibility(View.VISIBLE);
+//    }
 
     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
     fab.attachToRecyclerView(recyclerView);
@@ -215,6 +223,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data){
     mCursorAdapter.swapCursor(data);
+    Log.d(LOG_TAG,"cursor adapter count : "+mCursorAdapter.getItemCount());
+    Log.d(LOG_TAG,"cursor count : "+data.getCount());
+//    if(data.getCount()==0){
+//      Log.d(LOG_TAG,"data count is 0");
+//      TextView empty_textview=(TextView)findViewById(R.id.empty_view);
+//      recyclerView.setVisibility(View.GONE);
+//      empty_textview.setVisibility(View.VISIBLE);
+//    }
     mCursor = data;
   }
 
