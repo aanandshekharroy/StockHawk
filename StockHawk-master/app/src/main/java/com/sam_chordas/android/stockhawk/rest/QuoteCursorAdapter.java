@@ -31,6 +31,9 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
   private boolean isPercent;
   public QuoteCursorAdapter(Context context, Cursor cursor){
     super(context, cursor);
+//    if(cursor.getCount()!=0){
+//      updateEmptyView();
+//    }
     mContext = context;
   }
 

@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -36,6 +39,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
+import com.squareup.okhttp.internal.Util;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
   private static final String LOG_TAG = MyStocksActivity.class.getSimpleName();
@@ -76,6 +80,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
       if (isConnected){
         startService(mServiceIntent);
       } else{
+        setNetworkStatus(Utils.NO_INTERNET_CONNECTION);
         networkToast();
       }
     }
@@ -93,12 +98,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             }));
 
     recyclerView.setAdapter(mCursorAdapter);
-//    if(mCursorAdapter.getItemCount()==0){
-//      TextView empty_textview=(TextView)findViewById(R.id.empty_view);
-//      recyclerView.setVisibility(View.GONE);
-//      empty_textview.setVisibility(View.VISIBLE);
-//    }
-
     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
     fab.attachToRecyclerView(recyclerView);
     fab.setOnClickListener(new View.OnClickListener() {
@@ -162,11 +161,20 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
       GcmNetworkManager.getInstance(this).schedule(periodicTask);
     }
   }
+  public void setNetworkStatus(int status){
+    SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
+    SharedPreferences.Editor se=sp.edit();
+    se.putInt(this.getString(R.string.pref_network_status),status);
+    se.apply();
+  }
+
 
 
   @Override
   public void onResume() {
     super.onResume();
+    SharedPreferences sp=PreferenceManager.getDefaultSharedPreferences(this);
+//    sp.registerOnSharedPreferenceChangeListener(getA);
     getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
   }
 
@@ -225,15 +233,35 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mCursorAdapter.swapCursor(data);
     Log.d(LOG_TAG,"cursor adapter count : "+mCursorAdapter.getItemCount());
     Log.d(LOG_TAG,"cursor count : "+data.getCount());
-//    if(data.getCount()==0){
-//      Log.d(LOG_TAG,"data count is 0");
-//      TextView empty_textview=(TextView)findViewById(R.id.empty_view);
-//      recyclerView.setVisibility(View.GONE);
-//      empty_textview.setVisibility(View.VISIBLE);
-//    }
+    if(data.getCount()==0){
+      updateEmptyView(Utils.NO_DATA);
+    }else{
+      updateEmptyView(Utils.HAS_DATA);
+    }
     mCursor = data;
   }
-
+  private void updateEmptyView(int noInternetConnection) {
+    TextView textView;
+    switch (noInternetConnection){
+      case Utils.NO_INTERNET_CONNECTION:
+//        TextView textView=(TextView)findViewById(R.id.empty_view);
+//        textView.
+        break;
+      case Utils.NO_DATA:
+          textView =(TextView)findViewById(R.id.empty_view);
+          textView.setVisibility(View.VISIBLE);
+          if(!isConnected){
+            textView.setText(getString(R.string.no_data_no_internet));
+          }else{
+            textView.setText(getString(R.string.no_data));
+          }
+        break;
+      case Utils.HAS_DATA:
+        textView = (TextView) findViewById(R.id.empty_view);
+        textView.setVisibility(View.GONE);
+        break;
+    }
+  }
   @Override
   public void onLoaderReset(Loader<Cursor> loader){
     mCursorAdapter.swapCursor(null);

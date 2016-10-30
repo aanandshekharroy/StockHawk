@@ -1,24 +1,35 @@
 package com.sam_chordas.android.stockhawk.service;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+
+import static com.sam_chordas.android.stockhawk.rest.Utils.quoteJsonToContentVals;
 
 /**
  * Created by sam_chordas on 9/30/15.
@@ -44,7 +55,9 @@ public class StockTaskService extends GcmTaskService{
         .build();
 
     Response response = client.newCall(request).execute();
-    return response.body().string();
+    String return_response=response.body().string();
+    Log.d(LOG_TAG, String.valueOf(response.isSuccessful())+". - ."+return_response);
+    return return_response;
   }
 
   @Override
@@ -121,8 +134,12 @@ public class StockTaskService extends GcmTaskService{
             mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                 null, null);
           }
-          mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
-              Utils.quoteJsonToContentVals(getResponse));
+          ArrayList<ContentProviderOperation> quote=Utils.quoteJsonToContentVals(getResponse);
+          if(quote==null){
+            return 0;
+          }
+          mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,quote
+              );
         }catch (RemoteException | OperationApplicationException e){
           Log.e(LOG_TAG, "Error applying batch insert", e);
         }
@@ -133,5 +150,10 @@ public class StockTaskService extends GcmTaskService{
 
     return result;
   }
-
+  public void setNetworkStatus(Context context,int STATUS){
+    SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences.Editor spe= sharedPreferences.edit();
+    spe.putInt(context.getString(R.string.pref_network_status),STATUS);
+    spe.commit();
+  }
 }
