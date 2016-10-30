@@ -107,7 +107,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (isConnected){
           new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
               .content(R.string.content_test)
-              .inputType(InputType.TYPE_CLASS_TEXT)
+              .inputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS)
+              .inputRange(2,5)
+                  .positiveText(getString(R.string.search))
               .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
                 @Override public void onInput(MaterialDialog dialog, CharSequence input) {
                   // On FAB click, receive user input. Make sure the stock doesn't already exist
