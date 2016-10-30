@@ -25,6 +25,7 @@ public class Utils {
   public final static int NO_INTERNET_CONNECTION = 2;
   public final static int NO_DATA = 3;
   public final static int HAS_DATA = 4;
+  public final static int HAS_INVALID_DATA = 5;
   public static boolean showPercent = true;
 
   public static ArrayList quoteJsonToContentVals(String JSON) {

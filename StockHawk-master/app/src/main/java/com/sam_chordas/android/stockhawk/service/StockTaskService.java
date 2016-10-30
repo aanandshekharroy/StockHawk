@@ -68,11 +68,13 @@ public class StockTaskService extends GcmTaskService{
     }
     StringBuilder urlStringBuilder = new StringBuilder();
     try{
+//      getCo
       // Base URL for the Yahoo query
       urlStringBuilder.append("https://query.yahooapis.com/v1/public/yql?q=");
       urlStringBuilder.append(URLEncoder.encode("select * from yahoo.finance.quotes where symbol "
         + "in (", "UTF-8"));
     } catch (UnsupportedEncodingException e) {
+//     getBaseContext().
       e.printStackTrace();
     }
     if (params.getTag().equals("init") || params.getTag().equals("periodic")){
@@ -136,6 +138,7 @@ public class StockTaskService extends GcmTaskService{
           }
           ArrayList<ContentProviderOperation> quote=Utils.quoteJsonToContentVals(getResponse);
           if(quote==null){
+            setNetworkStatus(mContext,Utils.HAS_INVALID_DATA);
             return 0;
           }
           mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,quote

@@ -41,7 +41,9 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 import com.squareup.okhttp.internal.Util;
 
-public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+import static android.widget.Toast.makeText;
+
+public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
   private static final String LOG_TAG = MyStocksActivity.class.getSimpleName();
 
   /**
@@ -115,7 +117,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                       new String[] { input.toString() }, null);
                   if (c.getCount() != 0) {
                     Toast toast =
-                        Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                        makeText(MyStocksActivity.this, "This stock is already saved!",
                             Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                     toast.show();
@@ -175,11 +177,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     super.onResume();
     SharedPreferences sp=PreferenceManager.getDefaultSharedPreferences(this);
 //    sp.registerOnSharedPreferenceChangeListener(getA);
+    sp.registerOnSharedPreferenceChangeListener(this);
     getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
   }
 
   public void networkToast(){
-    Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+    makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
   }
 
   public void restoreActionBar() {
@@ -267,4 +270,25 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mCursorAdapter.swapCursor(null);
   }
 
+  @Override
+  protected void onPause() {
+    super.onPause();
+    SharedPreferences sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
+    sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    if(key.equals(getString(R.string.pref_network_status))){
+      int value=sharedPreferences.getInt(key,Utils.SERVER_UP);
+      if(value==Utils.HAS_INVALID_DATA){
+        Toast.makeText(this,getString(R.string.invalid_data),Toast.LENGTH_SHORT).show();
+//        sharedPreferences.cle
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+      }
+
+    }
+  }
 }
