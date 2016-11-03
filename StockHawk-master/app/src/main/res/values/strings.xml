@@ -31,4 +31,6 @@
 
   <!--Used in main screen when floating button is pressed to search for the typed stocks-->
   <string name="search">Search</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
