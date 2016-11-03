@@ -51,6 +51,9 @@ public class Utils {
           if (resultsArray != null && resultsArray.length() != 0) {
             for (int i = 0; i < resultsArray.length(); i++) {
               jsonObject = resultsArray.getJSONObject(i);
+              if(jsonObject.getString("Bid").equals("null")){
+                return null;
+              }
               batchOperations.add(buildBatchOperation(jsonObject));
             }
           }
