@@ -40,7 +40,7 @@ public class Utils {
         if (count == 1) {
           jsonObject = jsonObject.getJSONObject("results")
                   .getJSONObject("quote");
-          if(jsonObject.getString("Bid").equals("null")){
+          if(jsonObject.getString("Change").equals("null")){
             return null;
           }
 //          if()

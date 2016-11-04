@@ -96,6 +96,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               @Override public void onItemClick(View v, int position) {
                 //TODO:
                 // do something on item click
+                mCursor.moveToPosition(position);
+                String symbol=mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
+                Intent detailActivityIntent=new Intent(mContext,StockDetailActivity.class);
+                detailActivityIntent.putExtra(getString(R.string.symbol),symbol);
+                mContext.startActivity(detailActivityIntent);
+
+//                Toast.makeText(MyStocksActivity.this,"Clicked on : "+symbol,Toast.LENGTH_SHORT).show();
+
               }
             }));
 
@@ -239,11 +247,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mCursorAdapter.swapCursor(data);
     Log.d(LOG_TAG,"cursor adapter count : "+mCursorAdapter.getItemCount());
     Log.d(LOG_TAG,"cursor count : "+data.getCount());
-    if(data.getCount()==0){
-      updateEmptyView(Utils.NO_DATA);
-    }else{
-      updateEmptyView(Utils.HAS_DATA);
-    }
+//    if(mCursorAdapter.getItemCount()==0){
+//      updateEmptyView(Utils.NO_DATA);
+//    }else{
+//      updateEmptyView(Utils.HAS_DATA);
+//    }
     mCursor = data;
   }
   private void updateEmptyView(int noInternetConnection) {

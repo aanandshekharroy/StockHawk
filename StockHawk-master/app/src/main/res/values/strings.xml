@@ -1,36 +1,39 @@
 <resources>
-  <string name="app_name">Stock Hawk</string>
+    <string name="app_name">Stock Hawk</string>
 
-  <string name="action_example">Example action</string>
+    <string name="action_example">Example action</string>
 
-  <!--Used to launch settings activity-->
-  <string name="action_settings">Settings</string>
+    <!--Used as key to pass to the detail activity-->
+    <string name="symbol" translatable="false">symbol</string>
 
-  <string name="action_change_units" translatable="false">Change Units</string>
-  <string name="symbol_search" translatable="false">Symbol Search</string>
-  <string name="content_test" translatable="false">Search for a Stock Symbol</string>
+    <!--Used to launch settings activity-->
+    <string name="action_settings">Settings</string>
 
-  <!--Used to give hint to user to what to type in dialog box of stock search-->
-  <string name="input_hint">FB</string>
-  <string name="input_prefill" translatable="false"></string>
+    <string name="action_change_units" translatable="false">Change Units</string>
+    <string name="symbol_search" translatable="false">Symbol Search</string>
+    <string name="content_test" translatable="false">Search for a Stock Symbol</string>
 
-  <!--Used when floating action button is pressed and internet is off-->
-  <string name="network_toast">Uh-oh! This app requires an internet connection</string>
+    <!--Used to give hint to user to what to type in dialog box of stock search-->
+    <string name="input_hint">FB</string>
+    <string name="input_prefill" translatable="false"></string>
 
-  <!--Used in main screen to tell inform user about no data because of no internet connection-->
-  <string name="no_data_no_internet">No data available because no Internet connection</string>
+    <!--Used when floating action button is pressed and internet is off-->
+    <string name="network_toast">Uh-oh! This app requires an internet connection</string>
 
-  <!--Used in main screen to tell inform user about no data-->
-  <string name="no_data">No data available</string>
+    <!--Used in main screen to tell inform user about no data because of no internet connection-->
+    <string name="no_data_no_internet">No data available because no Internet connection</string>
 
-  <!--Used in dialog box after floating button is pressed to tell the user that no stocks of typed symbol is found-->
-  <string name="invalid_data">Invalid symbol</string>
+    <!--Used in main screen to tell inform user about no data-->
+    <string name="no_data">No data available</string>
 
-  <!--Key name for shared preference -->
-  <string name="pref_network_status" translatable="false">Network Status</string>
+    <!--Used in dialog box after floating button is pressed to tell the user that no stocks of typed symbol is found-->
+    <string name="invalid_data">Invalid symbol</string>
 
-  <!--Used in main screen when floating button is pressed to search for the typed stocks-->
-  <string name="search">Search</string>
+    <!--Key name for shared preference -->
+    <string name="pref_network_status" translatable="false">Network Status</string>
+
+    <!--Used in main screen when floating button is pressed to search for the typed stocks-->
+    <string name="search">Search</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.sam_chordas.android.stockhawk.rest;
+package com.sam_chordas.android.stockhawk.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -29,7 +29,7 @@ public class StocksWidget extends AppWidgetProvider {
         PendingIntent pendingIntent=PendingIntent.getActivity(context,0,launchIntent,0);
         views.setOnClickPendingIntent(R.id.widget,pendingIntent);
 
-        // Instruct the widget manager to update the widget
+        // Instruct the com.sam_chordas.android.stockhawk.widget manager to update the com.sam_chordas.android.stockhawk.widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -43,12 +43,12 @@ public class StocksWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+        // Enter relevant functionality for when the first com.sam_chordas.android.stockhawk.widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+        // Enter relevant functionality for when the last com.sam_chordas.android.stockhawk.widget is disabled
     }
 }
 
