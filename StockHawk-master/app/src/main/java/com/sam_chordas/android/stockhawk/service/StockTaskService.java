@@ -3,6 +3,7 @@ package com.sam_chordas.android.stockhawk.service;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -37,8 +38,10 @@ import static com.sam_chordas.android.stockhawk.rest.Utils.quoteJsonToContentVal
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService{
-  private String LOG_TAG = StockTaskService.class.getSimpleName();
 
+  private String LOG_TAG = StockTaskService.class.getSimpleName();
+  public static final String ACTION_DATA_UPDATED =
+          "com.example.android.sunshine.app.ACTION_DATA_UPDATED";
   private OkHttpClient client = new OkHttpClient();
   private Context mContext;
   private StringBuilder mStoredSymbols = new StringBuilder();
@@ -140,6 +143,7 @@ public class StockTaskService extends GcmTaskService{
           if(quote!=null&&quote.size()>0){
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,quote
             );
+            upadateWidget();
 //            setNetworkStatus(mContext,Utils.HAS_INVALID_DATA);
 //            return 0;
           }else{
@@ -156,6 +160,13 @@ public class StockTaskService extends GcmTaskService{
 
     return result;
   }
+
+  private void upadateWidget() {
+    Context context=mContext;
+    Intent dataUpdatedNotify=new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+    context.sendBroadcast(dataUpdatedNotify);
+  }
+
   public void setNetworkStatus(Context context,int STATUS){
     SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
     SharedPreferences.Editor spe= sharedPreferences.edit();

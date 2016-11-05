@@ -1,17 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#09C"
-                android:padding="@dimen/widget_margin">
-    <LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/widget"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+              android:background="@android:color/transparent">
         <TextView
             android:id="@+id/appwidget_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_margin="8dp"
@@ -25,6 +21,5 @@
         android:id="@+id/list_stocks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
-    </LinearLayout>
-
-</FrameLayout>
+    
+</LinearLayout>

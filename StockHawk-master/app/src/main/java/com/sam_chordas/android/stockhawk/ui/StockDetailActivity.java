@@ -70,8 +70,10 @@ public class StockDetailActivity extends AppCompatActivity implements
         mLineSet.setColor(getResources().getColor(R.color.line_set))
                 .setDotsStrokeThickness(Tools.fromDpToPx(2))
                 .setDotsStrokeColor(getResources().getColor(R.color.line_stroke))
-                .setDotsColor(getResources().getColor(R.color.line_dots));
+                .setDotsColor(getResources().getColor(R.color.line_dots))
+        ;
         lineChartView.addData(mLineSet);
+        lineChartView.setAxisBorderValues(0,0,step);
         lineChartView.show();
     }
 
@@ -100,6 +102,14 @@ public class StockDetailActivity extends AppCompatActivity implements
         }
         maxRange = Math.round(Collections.max(mArrayList));
         minRange = Math.round(Collections.min(mArrayList));
+        if(maxRange<100){
+            maxRange=0;
+            step=10;
+        }else if(maxRange<1000){
+            step=100;
+        }else{
+            step=1000;
+        }
         if(minRange>100)
             minRange = minRange-100;
 //        if(minRange/10<1){
