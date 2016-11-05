@@ -20,11 +20,11 @@ public class StocksWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
+        CharSequence widgetText = context.getString(R.string.app_name);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stocks_widget);
         views.setTextViewText(R.id.appwidget_text, widgetText);
-
+        views.setRemoteAdapter(R.id.list_stocks,new Intent(context,StockWidgetService.class));
         Intent launchIntent=new Intent(context, MyStocksActivity.class);
         PendingIntent pendingIntent=PendingIntent.getActivity(context,0,launchIntent,0);
         views.setOnClickPendingIntent(R.id.widget,pendingIntent);
@@ -37,6 +37,7 @@ public class StocksWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
+//            RemoteViews remoteViews=new RemoteViews(getP)
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }

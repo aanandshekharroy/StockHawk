@@ -3,6 +3,14 @@ package com.sam_chordas.android.stockhawk.widget;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.database.Cursor;
+import android.widget.AdapterView;
+import android.widget.RemoteViews;
+import android.widget.RemoteViewsService;
+
+import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -11,81 +19,78 @@ import android.content.Context;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class StockWidgetService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.sam_chordas.android.stockhawk.widget.action.FOO";
-    private static final String ACTION_BAZ = "com.sam_chordas.android.stockhawk.widget.action.BAZ";
-
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.sam_chordas.android.stockhawk.widget.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.sam_chordas.android.stockhawk.widget.extra.PARAM2";
-
-    public StockWidgetService() {
-        super("StockWidgetService");
-    }
-
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, StockWidgetService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
-
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, StockWidgetService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
+public class StockWidgetService extends RemoteViewsService {
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        return new RemoteViewsFactory() {
+            private Cursor data=null;
+            @Override
+            public void onCreate() {
+
             }
-        }
-    }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+            @Override
+            public void onDataSetChanged() {
+                if(data!=null){
+                    data.close();
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+                }
+                data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                        new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
+                                QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+                        QuoteColumns.ISCURRENT + " = ?",
+                        new String[]{"1"},
+                        null);
+            }
+
+            @Override
+            public void onDestroy() {
+                if(data!=null){
+                    data.close();
+                }
+            }
+
+            @Override
+            public int getCount() {
+                if(data!=null){
+                    return 0;
+                }
+                return data.getCount();
+            }
+
+            @Override
+            public RemoteViews getViewAt(int position) {
+                if(position== AdapterView.INVALID_POSITION||data==null){
+                    return null;
+                }
+                RemoteViews views=new RemoteViews(getPackageName(), R.layout.list_item_quote);
+                String symbol=data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
+                views.setTextViewText(R.id.stock_symbol,symbol);
+                views.setTextViewText(R.id.bid_price,data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE)));
+                views.setTextViewText(R.id.change,data.getString(data.getColumnIndex(QuoteColumns.CHANGE)));
+                return views;
+            }
+
+            @Override
+            public RemoteViews getLoadingView() {
+                return null;
+            }
+
+            @Override
+            public int getViewTypeCount() {
+                return 1;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return 0;
+            }
+
+            @Override
+            public boolean hasStableIds() {
+                return false;
+            }
+        };
     }
 }
