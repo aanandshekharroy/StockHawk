@@ -42,7 +42,7 @@
         <provider
             android:name=".data.generated.QuoteProvider"
             android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
-            android:exported="false"/>
+            android:exported="true"/>
 
         <receiver android:name=".widget.StocksWidget">
             <intent-filter>
@@ -56,7 +56,8 @@
 
         <service
             android:name=".widget.StockWidgetService"
-            android:exported="false">
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
         </service>
 
         <activity android:name=".ui.StockDetailActivity">

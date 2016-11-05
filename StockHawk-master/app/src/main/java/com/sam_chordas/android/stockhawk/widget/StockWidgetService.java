@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -20,7 +21,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteProvider;
  * helper methods.
  */
 public class StockWidgetService extends RemoteViewsService {
-
+    private static final String LOG_TAG=StockWidgetService.class.getSimpleName();
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
@@ -42,6 +43,8 @@ public class StockWidgetService extends RemoteViewsService {
                         QuoteColumns.ISCURRENT + " = ?",
                         new String[]{"1"},
                         null);
+
+                Log.d(LOG_TAG,"count: "+data.getCount());
             }
 
             @Override
