@@ -36,4 +36,7 @@
     <string name="search">Search</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <!--Used in main activity to notify that stock is already saved-->
+    <string name="stock_already_saved">This stock is already saved!</string>
 </resources>

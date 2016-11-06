@@ -128,7 +128,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                       new String[] { input.toString() }, null);
                   if (c.getCount() != 0) {
                     Toast toast =
-                        makeText(MyStocksActivity.this, "This stock is already saved!",
+                        makeText(MyStocksActivity.this,getString(R.string.stock_already_saved),
                             Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                     toast.show();
@@ -245,13 +245,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data){
     mCursorAdapter.swapCursor(data);
-    Log.d(LOG_TAG,"cursor adapter count : "+mCursorAdapter.getItemCount());
-    Log.d(LOG_TAG,"cursor count : "+data.getCount());
-//    if(mCursorAdapter.getItemCount()==0){
-//      updateEmptyView(Utils.NO_DATA);
-//    }else{
-//      updateEmptyView(Utils.HAS_DATA);
-//    }
     mCursor = data;
   }
   private void updateEmptyView(int noInternetConnection) {
